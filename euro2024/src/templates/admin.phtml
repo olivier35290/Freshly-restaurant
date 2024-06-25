@@ -1,0 +1,106 @@
+<section>
+    <h2>Panel Admin</h2>
+
+    <!-- Affiche un message d'erreur s'il y en a un -->
+    <?php if (isset($error)): ?>
+        <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+    <?php endif; ?>
+
+    <!-- Formulaire pour mettre à jour le résultat d'un match -->
+    <form method="POST" action="index.php?route=update-match-result">
+        <label for="match_id">Match</label>
+        <select id="match_id" name="match_id">
+            <?php foreach ($matches as $match): ?>
+                <option value="<?= $match['match_id'] ?>">
+                    <img src="<?= htmlspecialchars($match['team1_flag']) ?>" alt="<?= htmlspecialchars($match['team1_name']) ?> flag" width="20">
+                    <?= htmlspecialchars($match['team1_name']) ?> vs 
+                    <img src="<?= htmlspecialchars($match['team2_flag']) ?>" alt="<?= htmlspecialchars($match['team2_name']) ?> flag" width="20">
+                    <?= htmlspecialchars($match['team2_name']) ?> (<?= htmlspecialchars($match['match_date']) ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <label for="result">Résultat</label>
+        <select id="result" name="result" required>
+            <option value="1">Victoire de l'équipe 1</option>
+            <option value="N">Match nul</option>
+            <option value="2">Victoire de l'équipe 2</option>
+        </select>
+        <button type="submit">Valider</button>
+    </form>
+
+    <h3>Ajouter un nouveau match</h3>
+    <!-- Formulaire pour ajouter un nouveau match -->
+    <form method="POST" id="add-match-form">
+        <label for="team1_id">Équipe 1</label>
+        <select id="team1_id" name="team1_id" required>
+            <?php foreach ($teams as $team): ?>
+                <option value="<?= $team['id'] ?>"><?= htmlspecialchars($team['name']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <label for="team2_id">Équipe 2</label>
+        <select id="team2_id" name="team2_id" required>
+            <?php foreach ($teams as $team): ?>
+                <option value="<?= $team['id'] ?>"><?= htmlspecialchars($team['name']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <label for="match_date">Date et Heure</label>
+        <input type="datetime-local" id="match_date" name="match_date" required>
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" required>
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <h3>Matchs terminés</h3>
+    <div class="table-container">
+        <!-- Tableau des matchs terminés -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Match</th>
+                    <th>Date et Heure</th>
+                    <th>Résultat</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="matches-table-body">
+                <?php foreach ($matches as $match): ?>
+                    <?php if ($match['result']): ?>
+                        <tr id="match-<?= $match['match_id'] ?>">
+                            <td>
+                                <img src="<?= htmlspecialchars($match['team1_flag']) ?>" alt="<?= htmlspecialchars($match['team1_name']) ?> flag" width="20">
+                                <?= htmlspecialchars($match['team1_name']) ?> vs 
+                                <img src="<?= htmlspecialchars($match['team2_flag']) ?>" alt="<?= htmlspecialchars($match['team2_name']) ?> flag" width="20">
+                                <?= htmlspecialchars($match['team2_name']) ?>
+                            </td>
+                            <td><?= htmlspecialchars($match['match_date']) ?></td>
+                            <td><?= htmlspecialchars($match['result']) ?></td>
+                            <td><button class="delete-match-btn" data-match-id="<?= $match['match_id'] ?>">Supprimer</button></td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Classement des utilisateurs</h3>
+    <div class="table-container">
+        <!-- Tableau du classement des utilisateurs -->
+        <table id="leaderboard">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($user['username']) ?></td>
+                        <td><?= htmlspecialchars($user['score']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</section>
+
